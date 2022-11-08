@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:zchatapp/controllers/auth_controller.dart';
 import 'package:zchatapp/screens/verfication_screen.dart';
 
 class StartScreen extends StatelessWidget {
-   const StartScreen({Key? key}) : super(key: key);
-
-  
+  const StartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +31,9 @@ class StartScreen extends StatelessWidget {
                           shape: const StadiumBorder(),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  VerificationScreen(),));
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VerificationScreen(),
+                          ));
                         },
                         child: const Text('Continue'),
                       ),
