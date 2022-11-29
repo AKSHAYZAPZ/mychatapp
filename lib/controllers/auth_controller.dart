@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zchatapp/const/firebase.dart';
 import 'package:zchatapp/screens/homescreen/home_screen.dart';
+import 'package:zchatapp/screens/start_screen.dart';
 import 'package:zchatapp/screens/verfication_screen.dart';
 
 class AuthController extends GetxController {
-  // static AuthController instance = Get.find();
+  static AuthController instance = Get.find();
  
   late Rx<User?> _currentUser;
 
@@ -19,22 +20,22 @@ class AuthController extends GetxController {
   var isOtpSent = false.obs;
   var formKey = GlobalKey<FormState>();
 
-  late final PhoneVerificationCompleted phoneVerificationCompleted;
-  late final PhoneVerificationFailed phoneVerificationFailed;
-  late PhoneCodeSent phoneCodeSent;
+   PhoneVerificationCompleted? phoneVerificationCompleted;
+  PhoneVerificationFailed? phoneVerificationFailed;
+   PhoneCodeSent? phoneCodeSent;
   String verificationID = '';
 
   @override
   void onReady() {
     super.onReady();
     _currentUser = Rx<User?>(auth.currentUser);
-    _currentUser.bindStream(auth.userChanges());
+   _currentUser.bindStream(auth.userChanges());
     ever(_currentUser, initialScreen);
   }
 
   initialScreen(User? user) async {
     if (user == null) {
-      Get.offAll(() => VerificationScreen());
+      Get.offAll(() => const StartScreen());
     } else {
       Get.offAll(() => HomeScreen());
     }
@@ -58,9 +59,9 @@ class AuthController extends GetxController {
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "+91$phone",
-        verificationCompleted: phoneVerificationCompleted,
-        verificationFailed: phoneVerificationFailed,
-        codeSent: phoneCodeSent,
+        verificationCompleted: phoneVerificationCompleted!,
+        verificationFailed: phoneVerificationFailed!,
+        codeSent: phoneCodeSent!,
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } catch (e) {
@@ -97,8 +98,9 @@ class AuthController extends GetxController {
             'Id': userval.uid,
             'Name': user,
             'Phone': phone,
-            'about': '',
+            'about':'',
             'image_url':'',
+
           },SetOptions(merge: true),
         );
 
@@ -113,5 +115,11 @@ class AuthController extends GetxController {
 
   void logout() async {
     await auth.signOut();
+    usernameController.text ='';
+    phoneController.text ='';
+    isOtpSent.value =false;
+   for (var i = 0; i < otpController.length; i++) {
+       otpController[i].text ='';
+    }
   }
 }

@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zchatapp/const/firebase.dart';
+import 'package:zchatapp/controllers/home_controller.dart';
+import 'package:zchatapp/services/store_services.dart';
 
-Widget appbar(GlobalKey <ScaffoldState> key) {
+Widget appbar(GlobalKey<ScaffoldState> key) {
   return Container(
     decoration: const BoxDecoration(
       color: Color.fromARGB(255, 18, 140, 126),
@@ -16,16 +21,15 @@ Widget appbar(GlobalKey <ScaffoldState> key) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          
-           GestureDetector(
+          GestureDetector(
             onTap: () {
               key.currentState!.openDrawer();
             },
-             child: const Icon(
+            child: const Icon(
               Icons.settings,
               color: Colors.white,
-                     ),
-           ),
+            ),
+          ),
           RichText(
             text: const TextSpan(
               children: [
@@ -48,12 +52,24 @@ Widget appbar(GlobalKey <ScaffoldState> key) {
               ],
             ),
           ),
-          const CircleAvatar(
-            radius: 24,
-            backgroundImage: AssetImage(
-              "assets/images/images.png",
-            ),
-            backgroundColor: Colors.transparent,
+          FutureBuilder(
+            future: StoreServices.getUser(auth.currentUser!.uid),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                 var data = snapshot.data!.docs[0];
+                return CircleAvatar(
+                  radius: 24,
+                  backgroundImage: data['image_url'] == ''
+                      ? const AssetImage('assets/images/images.png')
+                      : NetworkImage(data['image_url']) as ImageProvider,
+                );
+              } else {
+                return const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.blue),
+                );
+              }
+            },
           ),
         ],
       ),

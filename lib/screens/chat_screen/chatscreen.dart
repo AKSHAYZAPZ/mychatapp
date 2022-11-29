@@ -1,12 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:zchatapp/controllers/chat_controller.dart';
+import 'package:zchatapp/screens/chat_screen/components/chat_bubble.dart';
+import 'package:zchatapp/services/store_services.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(ChatController());
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.white,
+        ),
         backgroundColor: const Color.fromARGB(255, 18, 140, 126),
         actions: const [
           // Icon(Icons.arrow_back_ios),
@@ -34,9 +50,9 @@ class ChatScreen extends StatelessWidget {
                     child: RichText(
                       text: TextSpan(
                         children: [
-                          const TextSpan(
-                            text: 'Username\n',
-                            style: TextStyle(
+                          TextSpan(
+                            text: '${controller.friendname}\n',
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -63,73 +79,31 @@ class ChatScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 20,
-                itemBuilder: (BuildContext context, int index) {
-                  return Directionality(
-                    textDirection:
-                        index.isEven ? TextDirection.rtl : TextDirection.ltr,
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.red,
-                            child: Image.asset(
-                                'assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                             
-                            decoration: BoxDecoration(
-                              
-                              color: index.isEven
-                                  ? const Color.fromARGB(255, 184, 236, 123)
-                                  : const Color.fromARGB(223, 233, 224, 224),
-                              borderRadius: BorderRadius.circular(12),
-                              
-                            ),
-                            constraints: const BoxConstraints(maxWidth: 230),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Text(
-                                      'hello hai ...how are you....habeebi come to dubai???',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Text(
-                                      '12:00 AM',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+            Obx(
+              () => Expanded(
+                child: controller.isLoading.value
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.blue),
+                        ),
+                      )
+                    : StreamBuilder(
+                        stream: StoreServices.getChats(controller.chatId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return Container();
+                          } else {
+                            return ListView(
+                              children: snapshot.data!.docs
+                                  .mapIndexed((currentValue, index) {
+                                var doc = snapshot.data!.docs[index];
+                                return chatBubble(index, doc);
+                              }).toList(),
+                            );
+                          }
+                        },
                       ),
-                    ),
-                  );
-                },
               ),
             ),
             SizedBox(
@@ -142,6 +116,7 @@ class ChatScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          controller: controller.messageController,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.emoji_emotions),
                             hintText: 'Type Message here...',
@@ -156,8 +131,12 @@ class ChatScreen extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: const Color.fromARGB(255, 18, 140, 126),
                     child: IconButton(
-                      color:const Color.fromARGB(255, 255, 255, 255),
-                      onPressed: () {},
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      onPressed: () {
+                        print(controller.chatId);
+                        controller
+                            .sendMessage(controller.messageController.text);
+                      },
                       icon: const Icon(Icons.send),
                     ),
                   )

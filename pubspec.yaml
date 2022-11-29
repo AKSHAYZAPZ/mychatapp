@@ -35,6 +35,11 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
+  image_picker: ^0.8.6
+  path_provider: ^2.0.11
+  permission_handler: ^10.2.0
+  shared_preferences: ^2.0.15
+  velocity_x: ^3.6.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -52,9 +57,10 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/images/images.png
-      - assets/images/—Pngtree—profile line black icon_4008155.png
-      - assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg
+    - assets/images/images.png
+    - assets/images/—Pngtree—profile line black icon_4008155.png
+    - assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg
+    - assets/images/2022-11-29-12-48-03-103.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

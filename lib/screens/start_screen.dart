@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:zchatapp/screens/verfication_screen.dart';
+import '../controllers/auth_controller.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Get.put(AuthController());
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -15,7 +16,12 @@ class StartScreen extends StatelessWidget {
             Expanded(
               flex: 4,
               child: Container(
-                color: Colors.white,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/2022-11-29-12-48-03-103.jpg'),
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -28,14 +34,19 @@ class StartScreen extends StatelessWidget {
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          primary: const Color.fromARGB(255, 18, 140, 126),
                           shape: const StadiumBorder(),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => VerificationScreen(),
-                          ));
+                          Get.to(() => const VerificationScreen());
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //   builder: (context) => const VerificationScreen(),
+                          // ));
                         },
-                        child: const Text('Continue'),
+                        child: const Text(
+                          'Continue',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ),

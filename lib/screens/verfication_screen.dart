@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'package:zchatapp/const/firebase.dart';
 import '../controllers/auth_controller.dart';
 
 class VerificationScreen extends StatelessWidget {
-  VerificationScreen({Key? key}) : super(key: key);
-
-  final controller = AuthController();
+  const VerificationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Let's connect"),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+        foregroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 18, 140, 126),
+        title: const Text(
+          "Let's connect",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             Form(
-              key: controller.formKey,
+              key: AuthController.instance.formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -30,7 +41,7 @@ class VerificationScreen extends StatelessWidget {
                       }
                       return null;
                     },
-                    controller: controller.usernameController,
+                    controller: AuthController.instance.usernameController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.account_box),
                       labelText: 'User Name',
@@ -53,7 +64,7 @@ class VerificationScreen extends StatelessWidget {
                       }
                       return null;
                     },
-                    controller: controller.phoneController,
+                    controller: AuthController.instance.phoneController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_android_outlined),
                       labelText: 'Phone Number',
@@ -67,12 +78,15 @@ class VerificationScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(
+            height: 12,
+            ),
             const Text(
               'We will send an SMS with a confirmation code to your phonenumber',
             ),
             Obx(
               () => Visibility(
-                visible: controller.isOtpSent.value,
+                visible: AuthController.instance.isOtpSent.value,
                 child: SizedBox(
                   height: 80,
                   child: Row(
@@ -84,7 +98,8 @@ class VerificationScreen extends StatelessWidget {
                         width: 50,
                         child: TextField(
                           keyboardType: TextInputType.number,
-                          controller: controller.otpController[index],
+                          controller:
+                              AuthController.instance.otpController[index],
                           textAlign: TextAlign.center,
                           onChanged: (value) {
                             if (value.length == 1 && index <= 5) {
@@ -113,20 +128,22 @@ class VerificationScreen extends StatelessWidget {
                 height: 40,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    primary: const Color.fromARGB(255, 18, 140, 126),
                     shape: const StadiumBorder(),
                   ),
                   onPressed: () async {
-                    if (controller.formKey.currentState!.validate()) {
-                      if (controller.isOtpSent.value == false) {
-                        controller.isOtpSent.value = true;
+                    if (AuthController.instance.formKey.currentState!
+                        .validate()) {
+                      if (AuthController.instance.isOtpSent.value == false) {
+                        AuthController.instance.isOtpSent.value = true;
 
-                        await controller
-                            .sendOtp(controller.phoneController.text);
+                        await AuthController.instance.sendOtp(
+                            AuthController.instance.phoneController.text);
                       } else {
-                        await controller.verfyOtp(
-                          controller.usernameController.text,
-                            controller.phoneController.text,
-                            );
+                        await AuthController.instance.verfyOtp(
+                          AuthController.instance.usernameController.text,
+                          AuthController.instance.phoneController.text,
+                        );
                         // print('else worked');
 
                       }
@@ -134,7 +151,10 @@ class VerificationScreen extends StatelessWidget {
 
                     // print(controller.phoneController.text);
                   },
-                  child: const Text('Continue'),
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),

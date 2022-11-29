@@ -1,42 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:zchatapp/screens/chat_screen/chatscreen.dart';
+import 'package:zchatapp/screens/homescreen/components/message_bubble.dart';
+import 'package:zchatapp/services/store_services.dart';
 
-Widget chatComponent() {
+Widget  chatComponent() {
   return Container(
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: 20,
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              Get.to(()=>ChatScreen(),transition: Transition.downToUp);
-            },
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 25,
-              child: Image.asset(
-                "assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                
-              ),
-            ),
-            title: const Text(
-              'Name',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            subtitle: const Text('Message here'),
-            trailing: Text(
-              'Lastseen',
-              style: TextStyle(color: Colors.grey[400]),
+      child: StreamBuilder(
+        stream: StoreServices.getMessages(),
+        builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
+        if(!snapshot.hasData){
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.blue),
             ),
           );
-        },
-      ),
+        }
+        else if(snapshot.data!.docs.isEmpty){
+          return const Center(
+            child: Text('Start a Conversation'),
+          );
+        }else{
+          return ListView(
+            children: snapshot.data!.docs.mapIndexed((currentValue, index) {
+              var doc = snapshot.data!.docs[index];
+              return messageBubble(doc);
+            },).toList(),
+          );
+        }
+      },)
     ),
   );
 }
