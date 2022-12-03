@@ -70,19 +70,3 @@ class ProfileController extends GetxController {
 
 
 }
-// await Permission.photos.request();
-    // await Permission.camera.request();
-
-    // var status = await Permission.photos.status;
-    // if (status.isGranted) {
-    //   try {
-    //     final img =
-    //         await ImagePicker().pickImage(source: source, imageQuality: 80);
-
-    //     imgpath.value = img!.path;
-    //   }on PlatformException catch (e) {
-    //     Get.snackbar('error', e.toString());
-    //   }
-    // }else{
-    //    Get.snackbar('error','Permission denied');
-    // }

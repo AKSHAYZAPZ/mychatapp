@@ -39,9 +39,6 @@ class StartScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           Get.to(() => const VerificationScreen());
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //   builder: (context) => const VerificationScreen(),
-                          // ));
                         },
                         child: const Text(
                           'Continue',

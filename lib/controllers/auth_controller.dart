@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:zchatapp/const/firebase.dart';
 import 'package:zchatapp/screens/homescreen/home_screen.dart';
 import 'package:zchatapp/screens/start_screen.dart';
-import 'package:zchatapp/screens/verfication_screen.dart';
+
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();

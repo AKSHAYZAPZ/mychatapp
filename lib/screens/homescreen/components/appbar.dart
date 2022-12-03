@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zchatapp/const/firebase.dart';
-import 'package:zchatapp/controllers/home_controller.dart';
 import 'package:zchatapp/services/store_services.dart';
 
 Widget appbar(GlobalKey<ScaffoldState> key) {
@@ -57,7 +55,7 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
-                 var data = snapshot.data!.docs[0];
+                var data = snapshot.data!.docs[0];
                 return CircleAvatar(
                   radius: 24,
                   backgroundImage: data['image_url'] == ''

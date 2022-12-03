@@ -32,6 +32,17 @@ class VerificationScreen extends StatelessWidget {
               key: AuthController.instance.formKey,
               child: Column(
                 children: [
+                  const Text(
+                    'Sign up',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Color.fromARGB(255, 18, 140, 126),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   TextFormField(
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -56,6 +67,7 @@ class VerificationScreen extends StatelessWidget {
                     height: 12,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter PhoneNumber';
@@ -79,7 +91,7 @@ class VerificationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-            height: 12,
+              height: 12,
             ),
             const Text(
               'We will send an SMS with a confirmation code to your phonenumber',

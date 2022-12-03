@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zchatapp/const/firebase.dart';
-import 'package:zchatapp/services/store_services.dart';
 import '../../chat_screen/chatscreen.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -10,8 +9,6 @@ Widget messageBubble(DocumentSnapshot doc) {
   var t =
       doc['created_on'] == null ? DateTime.now() : doc['created_on'].toDate();
   var time = intl.DateFormat("h:mma").format(t);
-
-  
 
   return Card(
     child: ListTile(
@@ -22,30 +19,17 @@ Widget messageBubble(DocumentSnapshot doc) {
               auth.currentUser!.uid == doc['toId']
                   ? doc['user_name']
                   : doc['friend_name'],
-              auth.currentUser!.uid == doc['toId'] 
-              ? doc['fromId'] 
-              : doc['toId'],
+              auth.currentUser!.uid == doc['toId']
+                  ? doc['fromId']
+                  : doc['toId'],
             ]);
       },
-      leading: StreamBuilder(
-        stream:StoreServices.getAllUsers() ,
-        builder:(BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
-          if(snapshot.hasData){
-             return CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 25,
-          child: Image.asset(
-            "assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-          ),
-        );
-          }else{
-            return const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Colors.blue),
-            );
-          }
-         
-        }, 
-        
+      leading: CircleAvatar(
+        backgroundColor: Colors.white,
+        radius: 25,
+        child: Image.asset(
+          "assets/images/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+        ),
       ),
       title: auth.currentUser!.uid == doc['toId']
           ? Text("${doc['user_name']}")

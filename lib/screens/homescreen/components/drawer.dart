@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:zchatapp/const/drawer.dart';
 import 'package:zchatapp/const/firebase.dart';
 import 'package:zchatapp/controllers/auth_controller.dart';
-import 'package:zchatapp/controllers/home_controller.dart';
 import 'package:zchatapp/screens/profile_screen/profile_scrfeen.dart';
 import 'package:zchatapp/services/store_services.dart';
 
